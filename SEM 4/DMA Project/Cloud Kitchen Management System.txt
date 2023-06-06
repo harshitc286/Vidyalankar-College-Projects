@@ -1,0 +1,160 @@
+-- Cloud Kitchen Management System (Swiggy or Zomato)
+
+-- Create Table of Menu Items
+CREATE TABLE menu_items (
+    item_id INT PRIMARY KEY,
+    item_name VARCHAR(50),
+    price DECIMAL(10, 2)
+);
+
+drop table menu_items;
+
+-- Create Sequence Menu
+create sequence menu
+    start with 1
+    increment by 1
+    minvalue 0
+    maxvalue 100;
+
+drop sequence menu;
+
+-- Adding Trigger 
+CREATE OR REPLACE TRIGGER item_added
+AFTER INSERT ON menu_items
+FOR EACH ROW
+BEGIN
+  dbms_output.put_line('Item added: ' || :new.item_name || ', price: ' || :new.price);
+END;
+
+    
+drop trigger item_added ;
+
+-- Insert some sample menu items
+INSERT INTO menu_items values(menu.nextval, 'Burger', 5.00);
+INSERT INTO menu_items values(menu.nextval, 'Fries', 4.50);
+INSERT INTO menu_items values(menu.nextval, 'Soft Drink', 5.50);
+INSERT INTO menu_items values(menu.nextval, 'Salad', 6.00);
+INSERT INTO menu_items values(menu.nextval, 'Chicken Sandwich', 8.00);
+INSERT INTO menu_items VALUES (menu.nextval, 'Butter Chicken', 12.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Chicken Tikka Masala', 11.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Saag Paneer', 9.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Aloo Gobi', 8.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Chana Masala', 7.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Samosas', 4.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Tandoori Chicken', 13.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Naan Bread', 2.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Paneer Tikka Masala', 11.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Vegetable Biryani', 9.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Garlic Naan', 2.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Dal Makhani', 7.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Chicken Tikka', 13.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Palak Paneer', 10.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Gulab Jamun', 4.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Mango Lassi', 3.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Lemon Juice', 5.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Pani Puri', 8.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Masala Dosa', 10.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Fish Cury', 56.99);
+INSERT INTO menu_items VALUES (menu.nextval, 'Waffer Pav', 14.99);
+
+
+
+select * from menu_items;
+drop table menu_items
+
+    
+-- Create a table for orders
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    order_date varchar2(35),
+    total_price float
+);
+
+DROP  TABLE orders;
+
+-- Create a table for order items
+CREATE TABLE order_items (
+    order_id INT,
+    item_id INT,
+    quantity INT,
+    PRIMARY KEY (order_id, item_id),
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (item_id) REFERENCES menu_items(item_id)
+);
+
+drop table order_items
+select * from order_items;
+
+-- Insert a sample order
+INSERT INTO orders VALUES(1,SYSTIMESTAMP,10.00);
+INSERT INTO orders VALUES(2,SYSTIMESTAMP,20.00);
+INSERT INTO orders VALUES(3,SYSTIMESTAMP,40.00);
+INSERT INTO orders VALUES(4,SYSDATE,40.00);
+INSERT INTO orders VALUES(5,SYSDATE,40.00);
+INSERT INTO orders VALUES(6,SYSTIMESTAMP,40.00);
+INSERT INTO orders VALUES(7,SYSTIMESTAMP,50.00);
+INSERT INTO orders VALUES(8,SYSTIMESTAMP,50.00);
+INSERT INTO orders VALUES(9,SYSTIMESTAMP,50.00);
+
+
+select * from orders;
+
+select * from menu_items;
+
+-- Insert the items for the sample order Our Price
+INSERT INTO order_items VALUES (1, 1, 2);
+INSERT INTO order_items VALUES (2, 2, 1);
+INSERT INTO order_items VALUES (3, 3, 5);
+INSERT INTO order_items VALUES (4, 4, 10);
+INSERT INTO order_items VALUES (5, 5, 30);
+INSERT INTO order_items VALUES (6, 6, 20);
+INSERT INTO order_items VALUES (7, 7, 20);
+INSERT INTO order_items VALUES (8, 8, 20);
+INSERT INTO order_items VALUES (9, 9, 20);
+
+    
+select * from order_items;
+
+
+
+-- Query all orders with their items and total price
+SELECT o.order_id, o.order_date, m.item_name, oi.quantity, m.price, o.total_price
+FROM orders o
+JOIN order_items oi ON o.order_id = oi.order_id
+JOIN menu_items m ON oi.item_id = m.item_id;
+
+select * from menu_items
+
+update  menu_items set price = 30
+where item_id= 1;
+
+-- Creating Index of m1
+create index m1
+on menu_items (item_name);
+
+
+SELECT index_name FROM user_indexes WHERE index_name = 'M1';
+
+drop index m1;  
+
+-- View Section
+create view v1 as select item_name,price from menu_items;
+select * from v1
+drop view v1
+    
+-- Calculating the Price * Quantity with Join
+CREATE VIEW order_details AS
+SELECT oi.order_id, mi.item_name, oi.quantity, mi.price, oi.quantity * mi.price AS total_cost
+FROM order_items oi
+JOIN menu_items mi ON oi.item_id = mi.item_id;
+
+SELECT * FROM order_details;
+
+-- Creating Synonym 
+create synonym s1 for orders
+select * from s1
+drop synonym s1
+
+    
+
+
