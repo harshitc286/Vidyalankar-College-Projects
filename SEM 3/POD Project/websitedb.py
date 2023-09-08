@@ -29,8 +29,8 @@ def create_userid():
         print(f"Username : {user}\nPassword : {paswd}")
         print("")
 
-    email_sender = 'websitedatabase65@gmail.com'
-    email_password = 'gzuhvpxabfzqvooy'
+    email_sender = 'Your_Gmail'
+    email_password = 'Gmail_SMTP_Password'
     email_receiver = f'{eml[3]}'
 
     subject = 'Welcome To WebsiteDB'
@@ -141,8 +141,8 @@ def feed_back():
         print(
             f'Dear User {val1},\nYour Feedback is :"{eml[4]}", \nFeedBack Was Submited,\nThanks For FeedBack Us, We Improve on it.')
         print("")
-    email_sender = 'websitedatabase65@gmail.com'
-    email_password = 'gzuhvpxabfzqvooy'
+    email_sender = 'Your_Gmail'
+    email_password = 'Gmail_SMTP_Password'
     email_receiver = f'{eml[3]}'
 
     subject = 'Thanks For Feedback to WebsiteDB'
